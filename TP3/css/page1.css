@@ -46,7 +46,8 @@ p
 
 video
 {
-	display: none;
+	display: inline-block;
+	visibility: hidden;
 	width: 360px;
 	height: 288px;
 	position: relative;

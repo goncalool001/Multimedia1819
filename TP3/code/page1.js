@@ -23,6 +23,6 @@ function animLastAnimEndHandler(ev)
 	el.parentNode.removeChild(el.parentNode.children[0]);  //nota: não é 1 porque o que era 1 passou a 0 depois da eliminação do anterior
 }
 
-/*
-ADD CODE
-*/
+function showVideoDelayed() {
+  	document.getElementById("video").style.visibility = "visible";
+}setTimeout("showVideoDelayed()", 8000);
