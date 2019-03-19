@@ -23,8 +23,10 @@ function main(){
 	var soundButton = document.getElementById("soundBtn");
 	var buttonImage = soundButton.getElementsByTagName("img")[0];
 	var music = document.getElementsByTagName("audio")[0];
+	var type = 0;
 
-	var buttonManager = function(ev){
+
+	var buttonManager = async function(ev){
 		if(ev.target.parentNode.id=="nextBtn" && (fotoAtual>=1 && fotoAtual<totalFotos)){
 			fotoAtual++;
 		}
@@ -38,22 +40,46 @@ function main(){
 			fotoAtual = totalFotos;
 		}
 		else if(ev.target.parentNode.id=="slideShowBtn"){
+			type =1;
+			updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type);
+			while (Esc(ev)) {
+				if(fotoAtual != totalFotos-1){
+					fotoAtual++;
+				}
+				else if (fotoAtual==totalFotos-1) {
+					fotoAtual=1;
+				}
+				updateScreen(fotoAtual,image,text);
+			 	await sleep(1700);
+			}
+			type =2;
+			updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type);
 		}
 		else if(ev.target.parentNode.id=="soundBtn"){
 			console.log("entrou");
 			muteUnmuteMusic(buttonImage,music);
 		}
 		updateScreen(fotoAtual,image,text);
-		updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton);
+		updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type);
 	}
 	updateScreen(fotoAtual,image,text);
-	updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton);
+	updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type);
 	firstPageButton.addEventListener("click",buttonManager);
 	lastPageButton.addEventListener("click",buttonManager);
 	nextButton.addEventListener("click",buttonManager);
 	backButton.addEventListener("click",buttonManager);
 	soundButton.addEventListener("click",buttonManager);
 	slideshowButton.addEventListener("click",buttonManager);
+}
+function Esc (e) {
+    if(e.key === "Escape"||e.key==="Esc"||e.keyCode==27) {
+		console.log("ESCAPE CRL");
+        return false;
+    }
+	else {
+		console.log("NOT ESCAPE CRL");
+		return true;
+	}
 }
 
 function updateScreen(fotoAtual,image,text){
@@ -67,7 +93,7 @@ function updateScreen(fotoAtual,image,text){
 	}
 }
 
-function updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton){
+function updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type){
 	if(fotoAtual==1){
 		firstPageButton.style.opacity = opacDisabled;
 		firstPageButton.disabled = true;
@@ -98,48 +124,20 @@ function updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageB
 		lastPageButton.style.opacity = 1;
 		lastPageButton.disabled = false;
 	}
-}
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+	else if (type ==1){// se for slideShow type==1
+		nextButton.disabled = true;
+		lastPageButton.disabled = true;
+		backButton.disabled = true;
+		firstPageButton.disabled = true;
+		slideshowButton.disabled = true;
 
-async function slideShow(ev) {
-	var image = document.getElementById("photo");
-	var text = document.getElementById("text");
-	var firstPageButton = document.getElementById("firstBtn");
-	var lastPageButton = document.getElementById("lastBtn");
-	var backButton = document.getElementById("backBtn");
-	var nextButton = document.getElementById("nextBtn");
-	var slideshowButton = document.getElementById("slideShowBtn");
-
-	nextButton.disabled = true;
-	lastPageButton.disabled = true;
-	backButton.disabled = true;
-	firstPageButton.disabled = true;
-	slideshowButton.disabled = true;
-
-	lastPageButton.style.opacity = opacDisabled;
-	nextButton.style.opacity = opacDisabled;
-	backButton.style.opacity = opacDisabled;
-	firstPageButton.style.opacity = opacDisabled;
-	slideshowButton.style.opacity = opacDisabled;
-	for(fotoAtual =1; fotoAtual<totalFotos ;fotoAtual++){
-		if(fotoAtual != totalFotos-1){
-			if(fotoAtual>9){
-				image.src = imgFolder + fotoAtual + ".jpg";
-				text.src = txtFolder + fotoAtual + ".txt";
-			}
-			else{
-				image.src = imgFolder + "0" + fotoAtual + ".jpg";
-				text.src = txtFolder + "0" + fotoAtual + ".txt";
-			}
-		}
-		if(fotoAtual==totalFotos-1){
-			image.src = imgFolder + totalFotos + ".jpg";
-			text.src = txtFolder + totalFotos + ".txt";
-		}
-		 await sleep(2000);
-		}
+		lastPageButton.style.opacity = opacDisabled;
+		nextButton.style.opacity = opacDisabled;
+		backButton.style.opacity = opacDisabled;
+		firstPageButton.style.opacity = opacDisabled;
+		slideshowButton.style.opacity = opacDisabled;
+	}
+	else if(type ==2){//terminar slideshow
 		firstPageButton.style.opacity = 1;
 		firstPageButton.disabled = false;
 		backButton.style.opacity = 1;
@@ -147,56 +145,13 @@ async function slideShow(ev) {
 		slideshowButton.style.opacity = 1;
 		slideshowButton.disabled = false;
 	}
+}
 
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function slideShow(ev) {
-	var image = document.getElementById("photo");
-	var text = document.getElementById("text");
-	var firstPageButton = document.getElementById("firstBtn");
-	var lastPageButton = document.getElementById("lastBtn");
-	var backButton = document.getElementById("backBtn");
-	var nextButton = document.getElementById("nextBtn");
-	var slideshowButton = document.getElementById("slideShowBtn");
-
-	nextButton.disabled = true;
-	lastPageButton.disabled = true;
-	backButton.disabled = true;
-	firstPageButton.disabled = true;
-	slideshowButton.disabled = true;
-
-	lastPageButton.style.opacity = opacDisabled;
-	nextButton.style.opacity = opacDisabled;
-	backButton.style.opacity = opacDisabled;
-	firstPageButton.style.opacity = opacDisabled;
-	slideshowButton.style.opacity = opacDisabled;
-	for(fotoAtual =1; fotoAtual<totalFotos ;fotoAtual++){
-		if(fotoAtual != totalFotos-1){
-			if(fotoAtual>9){
-				image.src = imgFolder + fotoAtual + ".jpg";
-				text.src = txtFolder + fotoAtual + ".txt";
-			}
-			else{
-				image.src = imgFolder + "0" + fotoAtual + ".jpg";
-				text.src = txtFolder + "0" + fotoAtual + ".txt";
-			}
-		}
-		if(fotoAtual==totalFotos-1){
-			image.src = imgFolder + totalFotos + ".jpg";
-			text.src = txtFolder + totalFotos + ".txt";
-		}
-		 await sleep(2000);
-		}
-		firstPageButton.style.opacity = 1;
-		firstPageButton.disabled = false;
-		backButton.style.opacity = 1;
-		backButton.disabled = false;
-		slideshowButton.style.opacity = 1;
-		slideshowButton.disabled = false;
-	}
 
 function muteUnmuteMusic(soundButtonImage,music){
 	if(music.muted==false){
@@ -207,4 +162,4 @@ function muteUnmuteMusic(soundButtonImage,music){
 		music.muted = false;
 		soundButtonImage.src = "../resources/extra/soundOnBtn.png";
 	}
-}
+};
