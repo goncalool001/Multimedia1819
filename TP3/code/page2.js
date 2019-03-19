@@ -27,6 +27,12 @@ function main(){
 
 
 	var buttonManager = async function(ev){
+		document.addEventListener('keydown', function(event) {
+			const key = event.key;
+			if (key === "Escape") {
+	    		flag=0;
+			}
+		});;
 		if(ev.target.parentNode.id=="nextBtn" && (fotoAtual>=1 && fotoAtual<totalFotos)){
 			fotoAtual++;
 		}
@@ -44,12 +50,6 @@ function main(){
 			updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,flag);
 			await sleep(1700);
 			while(flag==1){
-				document.addEventListener('keydown', function(event) {
-	    			const key = event.key;
-					if (key === "Escape") {
-			    		flag=0;
-					}
-				});;
 				if(fotoAtual != totalFotos){
 					fotoAtual++;
 				}
