@@ -23,7 +23,7 @@ function main(){
 	var soundButton = document.getElementById("soundBtn");
 	var buttonImage = soundButton.getElementsByTagName("img")[0];
 	var music = document.getElementsByTagName("audio")[0];
-	var type = 0;
+	var flag = 0;
 
 
 	var buttonManager = async function(ev){
@@ -40,46 +40,41 @@ function main(){
 			fotoAtual = totalFotos;
 		}
 		else if(ev.target.parentNode.id=="slideShowBtn"){
-			type =1;
-			updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type);
-			while (Esc(ev)) {
-				if(fotoAtual != totalFotos-1){
+			flag =1;
+			updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,flag);
+			await sleep(1700);
+			while(flag==1){
+				document.addEventListener('keydown', function(event) {
+	    			const key = event.key;
+					if (key === "Escape") {
+			    		flag=0;
+					}
+				});;
+				if(fotoAtual != totalFotos){
 					fotoAtual++;
 				}
-				else if (fotoAtual==totalFotos-1) {
+				else if (fotoAtual==totalFotos) {
 					fotoAtual=1;
 				}
 				updateScreen(fotoAtual,image,text);
 			 	await sleep(1700);
 			}
-			type =2;
-			updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type);
+			updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,flag);
 		}
 		else if(ev.target.parentNode.id=="soundBtn"){
-			console.log("entrou");
 			muteUnmuteMusic(buttonImage,music);
 		}
 		updateScreen(fotoAtual,image,text);
-		updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type);
+		updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,flag);
 	}
 	updateScreen(fotoAtual,image,text);
-	updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type);
+	updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,flag);
 	firstPageButton.addEventListener("click",buttonManager);
 	lastPageButton.addEventListener("click",buttonManager);
 	nextButton.addEventListener("click",buttonManager);
 	backButton.addEventListener("click",buttonManager);
 	soundButton.addEventListener("click",buttonManager);
 	slideshowButton.addEventListener("click",buttonManager);
-}
-function Esc (e) {
-    if(e.key === "Escape"||e.key==="Esc"||e.keyCode==27) {
-		console.log("ESCAPE CRL");
-        return false;
-    }
-	else {
-		console.log("NOT ESCAPE CRL");
-		return true;
-	}
 }
 
 function updateScreen(fotoAtual,image,text){
@@ -93,38 +88,8 @@ function updateScreen(fotoAtual,image,text){
 	}
 }
 
-function updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,type){
-	if(fotoAtual==1){
-		firstPageButton.style.opacity = opacDisabled;
-		firstPageButton.disabled = true;
-		backButton.style.opacity = opacDisabled;
-		backButton.disabled = true;
-		nextButton.style.opacity = 1;
-		nextButton.disabled = false;
-		lastPageButton.style.opacity = 1;
-		lastPageButton.disabled = false;
-	}
-	else if(fotoAtual==totalFotos){
-		firstPageButton.style.opacity = 1;
-		firstPageButton.disabled = false;
-		backButton.style.opacity = 1;
-		backButton.disabled = false;
-		nextButton.style.opacity = opacDisabled;
-		nextButton.disabled = true;
-		lastPageButton.style.opacity = opacDisabled;
-		lastPageButton.disabled = true;
-	}
-	else if(fotoAtual>1 && fotoAtual<totalFotos){
-		firstPageButton.style.opacity = 1;
-		firstPageButton.disabled = false;
-		backButton.style.opacity = 1;
-		backButton.disabled = false;
-		nextButton.style.opacity = 1;
-		nextButton.disabled = false;
-		lastPageButton.style.opacity = 1;
-		lastPageButton.disabled = false;
-	}
-	else if (type ==1){// se for slideShow type==1
+function updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageButton,slideshowButton,slideshow){
+	if(slideshow==1){
 		nextButton.disabled = true;
 		lastPageButton.disabled = true;
 		backButton.disabled = true;
@@ -137,13 +102,39 @@ function updateButtons(fotoAtual,firstPageButton,backButton,nextButton,lastPageB
 		firstPageButton.style.opacity = opacDisabled;
 		slideshowButton.style.opacity = opacDisabled;
 	}
-	else if(type ==2){//terminar slideshow
-		firstPageButton.style.opacity = 1;
-		firstPageButton.disabled = false;
-		backButton.style.opacity = 1;
-		backButton.disabled = false;
+	else{
 		slideshowButton.style.opacity = 1;
 		slideshowButton.disabled = false;
+		if(fotoAtual==1){
+		firstPageButton.style.opacity = opacDisabled;
+		firstPageButton.disabled = true;
+		backButton.style.opacity = opacDisabled;
+		backButton.disabled = true;
+		nextButton.style.opacity = 1;
+		nextButton.disabled = false;
+		lastPageButton.style.opacity = 1;
+		lastPageButton.disabled = false;
+		}
+		else if(fotoAtual==totalFotos){
+			firstPageButton.style.opacity = 1;
+			firstPageButton.disabled = false;
+			backButton.style.opacity = 1;
+			backButton.disabled = false;
+			nextButton.style.opacity = opacDisabled;
+			nextButton.disabled = true;
+			lastPageButton.style.opacity = opacDisabled;
+			lastPageButton.disabled = true;
+		}
+		else if(fotoAtual>1 && fotoAtual<totalFotos){
+			firstPageButton.style.opacity = 1;
+			firstPageButton.disabled = false;
+			backButton.style.opacity = 1;
+			backButton.disabled = false;
+			nextButton.style.opacity = 1;
+			nextButton.disabled = false;
+			lastPageButton.style.opacity = 1;
+			lastPageButton.disabled = false;
+		}
 	}
 }
 
